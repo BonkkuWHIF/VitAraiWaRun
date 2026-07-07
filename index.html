@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>วิศวะก้างปลารัน</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+
+  <!-- จอเลือกตัวละคร -->
+  <section id="screen-select" class="screen active">
+    <h1 class="game-title">วิศวะก้างปลารัน</h1>
+    <p class="subtitle">เลือกตัวละคร — แต่ละตัวสกิลไม่เหมือนกันนะ</p>
+    <div id="char-grid"></div>
+    <button id="btn-start" class="big-btn" disabled>เลือกตัวละครก่อน</button>
+    <p class="howto">↑ หรือแตะปุ่มขวา = กระโดด (กดซ้ำกลางอากาศได้) &nbsp;·&nbsp; ↓ หรือกดปุ่มซ้ายค้าง = สไลด์</p>
+  </section>
+
+  <!-- จอเล่นเกม -->
+  <section id="screen-game" class="screen">
+    <div id="game-wrap">
+      <canvas id="game-canvas" width="960" height="420"></canvas>
+      <div id="hud">
+        <div id="hp-wrap"><div id="hp-bar"></div></div>
+        <div id="shield-icons"></div>
+        <div id="score">0</div>
+        <div id="buffs"></div>
+      </div>
+      <div id="touch-controls">
+        <button id="btn-slide" type="button">⬇ สไลด์</button>
+        <button id="btn-jump" type="button">⬆ กระโดด</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- จอจบเกม -->
+  <section id="screen-over" class="screen">
+    <h2 class="game-title small">หมดแรงแล้ว!</h2>
+    <div id="over-char"></div>
+    <p id="over-score"></p>
+    <p id="over-best"></p>
+    <div class="btn-row">
+      <button id="btn-retry" class="big-btn">วิ่งอีกรอบ</button>
+      <button id="btn-change" class="big-btn secondary">เปลี่ยนตัวละคร</button>
+    </div>
+  </section>
+
+</div>
+<script type="module" src="js/main.js"></script>
+</body>
+</html>

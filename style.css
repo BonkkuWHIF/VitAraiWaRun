@@ -1,0 +1,205 @@
+/* ==== ธีมสมุดสเก็ตช์กากๆ ==== */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --paper: #fdf6e3;
+  --ink: #3a3226;
+  --accent: #e07a5f;
+  --line: #8d8371;
+}
+
+html, body {
+  height: 100%;
+  background:
+    repeating-linear-gradient(0deg, transparent 0 31px, rgba(141, 131, 113, .18) 31px 32px),
+    var(--paper);
+  color: var(--ink);
+  font-family: "Comic Sans MS", "Chalkboard SE", "TH Sarabun New", cursive, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+
+#app {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+.screen { display: none; }
+.screen.active { display: block; }
+
+.game-title {
+  text-align: center;
+  font-size: clamp(1.8rem, 6vw, 3rem);
+  margin: 8px 0 4px;
+  letter-spacing: 1px;
+  text-shadow: 2px 2px 0 rgba(224, 122, 95, .35);
+  transform: rotate(-1.2deg);
+}
+.game-title.small { font-size: clamp(1.5rem, 5vw, 2.2rem); }
+
+.subtitle { text-align: center; margin-bottom: 14px; opacity: .8; }
+
+/* ==== กริดเลือกตัวละคร 3x3 ==== */
+#char-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin: 0 auto 16px;
+  max-width: 720px;
+}
+
+.char-card {
+  background: #fffdf5;
+  border: 2.5px solid var(--ink);
+  border-radius: 14px 10px 16px 8px; /* มุมเบี้ยวๆ ให้ดูวาดมือ */
+  padding: 10px 8px;
+  text-align: center;
+  cursor: pointer;
+  transition: transform .12s;
+  user-select: none;
+}
+.char-card:nth-child(odd) { transform: rotate(-.8deg); }
+.char-card:nth-child(even) { transform: rotate(.7deg); }
+.char-card:hover { transform: scale(1.05) rotate(0deg); }
+.char-card.selected {
+  border-color: var(--accent);
+  border-width: 4px;
+  background: #fff1e8;
+  box-shadow: 3px 4px 0 rgba(58, 50, 38, .3);
+  transform: scale(1.06) rotate(0deg);
+}
+.char-card img {
+  width: 64px;
+  height: 76px;
+  object-fit: contain;
+  image-rendering: auto;
+}
+.char-card .char-name { font-weight: bold; font-size: 1rem; }
+.char-card .char-skill { font-size: .82rem; color: var(--accent); font-weight: bold; }
+.char-card .char-desc { font-size: .72rem; opacity: .75; min-height: 2.2em; }
+.char-card .char-best { font-size: .7rem; opacity: .6; }
+
+/* ==== ปุ่ม ==== */
+.big-btn {
+  display: block;
+  margin: 8px auto;
+  padding: 12px 34px;
+  font-family: inherit;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--paper);
+  background: var(--accent);
+  border: 3px solid var(--ink);
+  border-radius: 18px 12px 20px 10px;
+  cursor: pointer;
+  box-shadow: 3px 4px 0 rgba(58, 50, 38, .4);
+  transform: rotate(-.5deg);
+}
+.big-btn:hover:not(:disabled) { transform: scale(1.04); }
+.big-btn:active:not(:disabled) { transform: translateY(2px); box-shadow: 1px 2px 0 rgba(58, 50, 38, .4); }
+.big-btn:disabled { opacity: .45; cursor: not-allowed; }
+.big-btn.secondary { background: #81b29a; }
+.btn-row { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+
+.howto { text-align: center; font-size: .85rem; opacity: .7; margin-top: 10px; }
+
+/* ==== จอเกม ==== */
+#game-wrap {
+  position: relative;
+  max-width: 960px;
+  margin: 0 auto;
+}
+#game-canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 3px solid var(--ink);
+  border-radius: 12px 8px 14px 8px;
+  background: var(--paper);
+  touch-action: none;
+}
+
+/* HUD ลอยบน canvas */
+#hud {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  padding: 10px 14px;
+}
+#hp-wrap {
+  width: min(38%, 260px);
+  height: 20px;
+  border: 2.5px solid var(--ink);
+  border-radius: 10px;
+  background: #fffdf5;
+  overflow: hidden;
+}
+#hp-bar {
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, #e07a5f, #f2cc8f);
+  transition: width .15s;
+}
+#shield-icons { position: absolute; top: 34px; left: 14px; font-size: 1.1rem; }
+#score {
+  position: absolute;
+  top: 8px;
+  right: 14px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-shadow: 1px 1px 0 #fff;
+}
+#buffs {
+  position: absolute;
+  top: 44px;
+  right: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  align-items: flex-end;
+  font-size: .95rem;
+}
+.buff-chip {
+  background: rgba(255, 253, 245, .9);
+  border: 2px solid var(--ink);
+  border-radius: 10px;
+  padding: 1px 8px;
+}
+
+/* ปุ่มมือถือ */
+#touch-controls {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 10px;
+}
+#touch-controls button {
+  flex: 1;
+  padding: 18px 0;
+  font-family: inherit;
+  font-size: 1.15rem;
+  font-weight: bold;
+  border: 3px solid var(--ink);
+  border-radius: 14px 10px 16px 10px;
+  background: #fffdf5;
+  cursor: pointer;
+  touch-action: none;
+  user-select: none;
+}
+#touch-controls button:active { background: #f2cc8f; }
+@media (hover: hover) and (pointer: fine) {
+  #touch-controls { opacity: .55; } /* เดสก์ท็อปยังกดได้ แต่จางลง */
+}
+
+/* ==== จอ game over ==== */
+#screen-over { text-align: center; padding-top: 30px; }
+#over-char img { width: 110px; height: 130px; object-fit: contain; }
+#over-char .char-name { font-weight: bold; font-size: 1.2rem; }
+#over-score { font-size: 1.6rem; margin: 8px 0 2px; }
+#over-best { font-size: 1rem; opacity: .75; margin-bottom: 16px; }
+#over-best.new-record { color: var(--accent); font-weight: bold; opacity: 1; }
+
+@media (max-width: 560px) {
+  .char-card img { width: 46px; height: 56px; }
+  .char-card .char-desc { display: none; }
+}
